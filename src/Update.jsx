@@ -40,7 +40,6 @@ function RepeatedText({ text, vertical = false, style = {}, ...props }) {
 
   return (
     <span ref={containerRef} style={{ display: vertical ? 'inline-block' : 'block', width: '100%', height: '100%', ...style }} {...props}>
-      {/* Hidden span to measure text size */}
       <span ref={measureRef} style={{ position: "absolute", visibility: "hidden", whiteSpace: "nowrap", writingMode: vertical ? 'vertical-rl' : 'initial' }}>
         {text}
       </span>
@@ -58,6 +57,9 @@ export default function VictimInterface() {
   const [pendingSubject, setPendingSubject] = useState("I");
   const [pendingObject, setPendingObject] = useState("I");
   const [poemOpacity, setPoemOpacity] = useState(1);
+
+  const [subjectColor] = useState("#c593d4");
+  const [objectColor] = useState("#93bad4");
   const fadeTimeout = useRef(null);
 
   const poemStage = stages[pendingSubject.toLowerCase()]?.[pendingObject.toLowerCase()];
@@ -105,8 +107,8 @@ export default function VictimInterface() {
           videoSrc={leftPanel.videoSrc}
           pronouns={pronouns}
           selectedPronoun={subjectPronoun}
+          baseColor={subjectColor}
           onPronounSelect={v => handlePronounChange("subject", v)}
-          colorMode={leftPanel.colorMode}
           descriptionText={subjectDescription}
           videoOpacity={poemOpacity}
         />
@@ -146,9 +148,9 @@ export default function VictimInterface() {
           videoSrc={rightPanel.videoSrc}
           blankColor={rightPanel.bgColor}
           pronouns={pronouns}
+          baseColor={objectColor}
           selectedPronoun={objectPronoun}
           onPronounSelect={v => handlePronounChange("object", v)}
-          colorMode={rightPanel.colorMode}
           descriptionText={objectDescription}
           videoOpacity={poemOpacity}
         />

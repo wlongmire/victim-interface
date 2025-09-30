@@ -1,7 +1,7 @@
 import { Panel, Title, Description, Highlight, ButtonGroup, Button } from "./Update.styled";
 import VideoOrBlank from "./VideoOrBlank";
 
-function renderDescription(descriptionText, highlightWord, isBlack, Highlight) {
+function renderDescription(descriptionText, highlightWord, highlightBg, highlightColor, Highlight) {
   const regex = new RegExp(highlightWord, 'i');
   const match = regex.exec(descriptionText);
   if (!match) return descriptionText;
@@ -12,7 +12,7 @@ function renderDescription(descriptionText, highlightWord, isBlack, Highlight) {
 
   return [
     before,
-    <Highlight key="highlight" bg={isBlack ? "#fff" : undefined} color={isBlack ? "#000" : "#fff"}>{word}</Highlight>,
+    <Highlight key="highlight" bg={highlightBg} color={highlightColor}>{word}</Highlight>,
     after
   ];
 }
@@ -23,25 +23,22 @@ export function SubjectPanel({
   pronouns,
   selectedPronoun,
   onPronounSelect,
-  colorMode = "black",
   descriptionText = "",
+  baseColor = "#dcaa81",
   videoOpacity = 1,
   children
 }) {
   // Determine colors based on colorMode
-  const isBlack = colorMode === "black";
-  const panelBg = isBlack ? "#000" : "#fff";
-  const panelColor = isBlack ? "#fff" : "#000";
-  const buttonSelectedBg = isBlack ? "#fff" : "#fff";
-  const buttonSelectedColor = isBlack ? "#000" : "#000";
-  const buttonUnselectedColor = isBlack ? "#fff" : "#000";
-  // const buttonBorder = isBlack ? "2px solid #000" : "2px solid #fff";
+  const panelBg =  "#000";
+  const panelColor = baseColor; 
+  const buttonSelectedBg = baseColor; 
+  const buttonSelectedColor = "#000"; 
+  const buttonUnselectedColor = baseColor;
 
 
   return (
     <Panel bg={panelBg} color={panelColor}>
-  <VideoOrBlank showVideo={showVideo} videoSrc={videoSrc} blankColor={panelBg} opacity={videoOpacity} />
-      
+    <VideoOrBlank showVideo={showVideo} videoSrc={videoSrc} blankColor={panelBg} opacity={videoOpacity} />  
       <div style={{
         position: 'relative',
         zIndex: 1,
@@ -55,7 +52,7 @@ export function SubjectPanel({
       }}>
         {children}
         <Title size="5rem" style={{ color: panelColor }}>{selectedPronoun.toUpperCase()}</Title>
-          <Description style={{ color: panelColor }}>{renderDescription(descriptionText, "Subject", isBlack, Highlight)}</Description>
+          <Description style={{ color: panelColor }}>{renderDescription(descriptionText, "Subject", baseColor, "#000", Highlight)}</Description>
         <ButtonGroup>
           {pronouns.map((p) => (
             <Button
@@ -66,7 +63,7 @@ export function SubjectPanel({
                 color: selectedPronoun === p ? buttonSelectedColor : buttonUnselectedColor,
                 opacity: p === "They" ? 0.7 : 1,
                 fontWeight: selectedPronoun === p ? 700 : 400,
-                border: "1px solid #ccc"
+                border: `1px solid ${baseColor}`
               }}
             >
               {p}
@@ -84,26 +81,21 @@ export function ObjectPanel({
   pronouns,
   selectedPronoun,
   onPronounSelect,
-  colorMode = "white",
   descriptionText = "",
   videoOpacity = 1,
+  baseColor = "#ff00ff",
   children
 }) {
-  // Determine colors based on colorMode
-  const isBlack = colorMode === "black";
-  const panelBg = isBlack ? "#000" : "#fff";
-  // Description text is always white in black mode
-  const panelColor = isBlack ? "#fff" : "#000";
-  // Pronoun button: in black mode, selected = black text on white, unselected = white text on transparent
-  const buttonSelectedBg = isBlack ? "#fff" : "#fff";
-  const buttonSelectedColor = isBlack ? "#000" : "#000";
-  const buttonUnselectedColor = isBlack ? "#fff" : "#000";
-  const buttonBorder = "1px solid #ccc"
-
-
+  const panelBg = "#000";
+  const panelColor = baseColor;
+  const buttonSelectedBg = baseColor;
+  const buttonSelectedColor = "#000";
+  const buttonUnselectedColor = baseColor;
+  const buttonBorder = `1px solid ${baseColor}`;
+  
   return (
     <Panel bg={panelBg} color={panelColor}>
-  <VideoOrBlank showVideo={showVideo} videoSrc={videoSrc} blankColor={panelBg} opacity={videoOpacity} />
+      <VideoOrBlank showVideo={showVideo} videoSrc={videoSrc} blankColor={panelBg} opacity={videoOpacity} />
       <div style={{
         position: 'relative',
         zIndex: 1,
@@ -117,7 +109,7 @@ export function ObjectPanel({
       }}>
         {children}
         <Title size="5rem" style={{ color: panelColor }}>{selectedPronoun.toUpperCase()}</Title>
-          <Description style={{ color: panelColor }}>{renderDescription(descriptionText, "Object", isBlack, Highlight)}</Description>
+        <Description style={{ color: panelColor }}>{renderDescription(descriptionText, "Object", baseColor, "#000", Highlight)}</Description>
         <ButtonGroup>
           {pronouns.map((p) => (
             <Button
@@ -128,7 +120,7 @@ export function ObjectPanel({
                 color: selectedPronoun === p ? buttonSelectedColor : buttonUnselectedColor,
                 opacity: 1,
                 fontWeight: selectedPronoun === p ? 700 : 400,
-                border: selectedPronoun === p ? buttonBorder : "1px solid #ccc",
+                border: selectedPronoun === p ? buttonBorder : `1px solid ${baseColor}`,
               }}
             >
               {p}
