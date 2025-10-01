@@ -1,4 +1,3 @@
-
 import styled from "styled-components";
 
 export const PoemWord = styled.span`
@@ -123,6 +122,10 @@ export const Panel = styled.div`
   position: relative;
   background: ${props => props.bg || "#fff"};
   color: ${props => props.color || "#000"};
+  transition: opacity 1s;
+  &.fade-out {
+    transition: opacity 1s;
+  }
 `;
 
 export const Title = styled.h1`
@@ -137,6 +140,10 @@ export const Description = styled.p`
   text-align: left;
   line-height: 1.3;
   width: 75%;
+  transition: opacity 1s;
+  &.fade-out {
+    transition: opacity 1s;
+  }
 `;
 
 export const Highlight = styled.span`
@@ -159,10 +166,29 @@ export const Button = styled.button`
   font-size: 1.125rem;
   border: none;
   border-radius: 0.25em;
-  background: ${props => props.bg || "#000"};
-  color: ${props => props.color || "#fff"};
-  opacity: ${props => props.opacity || 1};
-  cursor: pointer;
+    background: ${({ selected, bg }) =>
+      selected ? bg : 'transparent'};
+    color: ${({ selected, bg }) =>
+      selected ? '#fff' : bg};
+    border: 2px solid ${({ bg }) => bg};
+    border-radius: 8px;
+    padding: 0.5em 1.2em;
+    margin: 0.3em 0.5em;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    box-shadow: ${({ selected }) =>
+      selected ? '0 0 0 2px rgba(0,0,0,0.08)' : 'none'};
+
+    &:hover {
+      ${({ selected, bg }) =>
+        !selected && `
+          background: ${bg ? bg + '80' : 'rgba(0,0,0,0.5)'};
+          color: #fff;
+          box-shadow: 0 0 0 2px rgba(0,0,0,0.065);
+        `}
+    }
 `;
 
 export const PoemPanel = styled.div`
@@ -173,6 +199,10 @@ export const PoemPanel = styled.div`
   justify-content: center;
   padding: 0 2.5rem;
   text-align: center;
+  transition: opacity 1s;
+  &.fade-out {
+    transition: opacity 1s;
+  }
 `;
 
 
@@ -182,4 +212,8 @@ export const Poem = styled.div`
   line-height: 1.2;
   font-family: serif;
   opacity: ${props => props.$opacity ?? 1};
+  transition: opacity 1s;
+  &.fade-out {
+    transition: opacity 1s;
+  }
 `;

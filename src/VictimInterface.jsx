@@ -73,12 +73,7 @@ export default function VictimInterface() {
 	const pronouns = ["I", "You", "They"];
 
 	function handlePronounChange(type, value) {
-		setPronounState(prev => ({
-			...prev,
-			[type]: value
-		}));
-
-		// Reset all opacities to 0
+		// Fade out all UI
 		setSubjectDescOpacity(0);
 		setObjectDescOpacity(0);
 		setPoemOpacity(0);
@@ -88,19 +83,26 @@ export default function VictimInterface() {
 
 		if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
 
-		// Staged fade-in sequence
+		// After fade-out, update pronounState and fade in new content
 		fadeTimeout.current = setTimeout(() => {
+			setPronounState(prev => ({
+				...prev,
+				[type]: value,
+				[type === "subject" ? "pendingSubject" : "pendingObject"]: value
+			}));
+
+			// Staged fade-in sequence (same as before, but after content update)
 			setSubjectDescOpacity(1);
 			setTimeout(() => {
 				setObjectDescOpacity(1);
 				setTimeout(() => {
-					setTimeout(() => setPoemOpacity(1), Math.random() * 2000);
-					setTimeout(() => setLeftVideoOpacity(1), 1000 + Math.random() * 2000);
-					setTimeout(() => setCenterVideoOpacity(1), 500 + Math.random() * 2000);
-					setTimeout(() => setRightVideoOpacity(1), 1000 + Math.random() * 2000);
-				}, 1000);
-			}, 2000);
-		}, 2000);
+					setPoemOpacity(1);
+					setTimeout(() => setLeftVideoOpacity(1), 200 + Math.random() * 100);
+					setTimeout(() => setCenterVideoOpacity(1), 200 + Math.random() * 100);
+					setTimeout(() => setRightVideoOpacity(1), 200 + Math.random() * 100);
+				}, 300);
+			}, 500);
+		}, 1000); // Wait for fade-out to complete
 	}
 
 	// Shared flicker handlers

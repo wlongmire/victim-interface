@@ -1,5 +1,5 @@
-
 export default function VideoOrBlank({ showVideo, videoSrc, blankColor = "#e0e0e0", opacity = 1, ...props }) {
+  const transitionStyle = { transition: 'opacity 1s' };
   return showVideo ? (
     <video
       src={videoSrc}
@@ -16,6 +16,7 @@ export default function VideoOrBlank({ showVideo, videoSrc, blankColor = "#e0e0e
         objectFit: 'cover',
         zIndex: 0,
         opacity,
+        ...transitionStyle,
         ...props.style
       }}
       {...props}
@@ -31,6 +32,7 @@ export default function VideoOrBlank({ showVideo, videoSrc, blankColor = "#e0e0e
         background: blankColor,
         zIndex: 0,
         opacity,
+        ...transitionStyle,
         ...props.style
       }}
       {...props}

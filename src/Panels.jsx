@@ -52,9 +52,10 @@ export function PronounPanel({
             <Button
               key={p}
               onClick={() => onPronounSelect(p)}
+              bg={buttonSelectedBg}
+              color={selectedPronoun === p ? buttonSelectedColor : buttonUnselectedColor}
+              selected={selectedPronoun === p}
               style={{
-                background: selectedPronoun === p ? buttonSelectedBg : "transparent",
-                color: selectedPronoun === p ? buttonSelectedColor : buttonUnselectedColor,
                 opacity: buttonOpacity,
                 fontWeight: selectedPronoun === p ? 700 : 400,
                 border: buttonBorder,
