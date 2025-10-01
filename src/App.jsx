@@ -1,9 +1,10 @@
-import Update from './Update';
+import VictimInterface from './VictimInterface';
+
 
 function App() {
   return (
     <div>
-      <Update/>
+      <VictimInterface/>
     </div>
   )
 }

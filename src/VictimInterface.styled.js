@@ -2,9 +2,8 @@
 import styled from "styled-components";
 
 export const PoemWord = styled.span`
-  border-radius: 0.3em;
-  padding: 0.08em 0.32em;
-  margin: 0 0.08em;
+  padding: 0.05em 0.25em;
+  margin: 0.05em 0.0.5em;
   display: inline-block;
 `;
 
