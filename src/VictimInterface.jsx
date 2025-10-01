@@ -55,6 +55,7 @@ export default function VictimInterface() {
 	const [subjectHeading, setSubjectHeading] = useState([{char: 'I', visible: true}]);
 	const [objectHeading, setObjectHeading] = useState([{char: 'I', visible: true}]);
 	const [isAnimatingHeading, setIsAnimatingHeading] = useState(false);
+	const [isLocked, setIsLocked] = useState(false);
 	const headingAnimTimeout = useRef(null);
 	const headingAnimTimers = useRef([]);
 
@@ -85,6 +86,8 @@ export default function VictimInterface() {
 	const pronouns = ["I", "You", "They"];
 
 	function handlePronounChange(type, value) {
+		if (isLocked) return; // Prevent ALL input during animation
+		setIsLocked(true);
 		// === Animation Timing Constants (adjust here) ===
 		const LETTER_ANIM_MS = 500; // ms per letter fade in/out
 		const WAIT_AFTER_REMOVE_MS = 1500; // ms to wait after all letters removed
@@ -147,9 +150,14 @@ export default function VictimInterface() {
 						setObjectDescOpacity(1);
 						setTimeout(() => {
 							setPoemOpacity(1);
-							setTimeout(() => setLeftVideoOpacity(1), VIDEO_FADE_IN_MIN_MS + Math.random() * VIDEO_FADE_IN_RANGE_MS);
-							setTimeout(() => setCenterVideoOpacity(1), VIDEO_FADE_IN_MIN_MS + Math.random() * VIDEO_FADE_IN_RANGE_MS);
-							setTimeout(() => setRightVideoOpacity(1), VIDEO_FADE_IN_MIN_MS + Math.random() * VIDEO_FADE_IN_RANGE_MS);
+							// Wait for all video fade-ins to finish before unlocking
+							const maxVideoFade = VIDEO_FADE_IN_MIN_MS + VIDEO_FADE_IN_RANGE_MS;
+							setTimeout(() => setLeftVideoOpacity(1), maxVideoFade);
+							setTimeout(() => setCenterVideoOpacity(1), maxVideoFade);
+							setTimeout(() => {
+								setRightVideoOpacity(1);
+								setIsLocked(false); // UNLOCK after all transitions
+							}, maxVideoFade);
 						}, POEM_FADE_IN_MS);
 					}, DESC_FADE_IN_GAP_MS);
 				}, newPronoun.length * letterAnimMs));
@@ -221,6 +229,7 @@ export default function VictimInterface() {
 					onMouseLeave={handleSubjectPanelMouseLeave}
 					displayedHeading={subjectHeading}
 					overlayOpacity={subjectOverlay}
+					isLocked={isLocked}
 				/>
 
 				<PoemPanel
@@ -272,6 +281,7 @@ export default function VictimInterface() {
 					onMouseLeave={handleObjectPanelMouseLeave}
 					displayedHeading={objectHeading}
 					overlayOpacity={objectOverlay}
+					isLocked={isLocked}
 				/>
 			</Container>
 

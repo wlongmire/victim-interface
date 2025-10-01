@@ -23,6 +23,7 @@ export function PronounPanel({
   descriptionOpacity = 1,
   displayedHeading,
   overlayOpacity = 0,
+  isLocked = false,
 }) {
   const panelBg = "#000";
   const panelColor = baseColor + opacityHex;
@@ -82,14 +83,17 @@ export function PronounPanel({
           {pronouns.map((p) => (
             <Button
               key={p}
-              onClick={() => onPronounSelect(p)}
+              onClick={() => !isLocked && onPronounSelect(p)}
               bg={buttonSelectedBg}
               color={selectedPronoun === p ? buttonSelectedColor : buttonUnselectedColor}
               selected={selectedPronoun === p}
+              disabled={isLocked}
               style={{
                 opacity: buttonOpacity,
                 fontWeight: selectedPronoun === p ? 700 : 400,
                 border: buttonBorder,
+                pointerEvents: isLocked ? 'none' : undefined,
+                filter: isLocked ? 'grayscale(0.7) opacity(0.7)' : undefined,
               }}
             >
               {p}
