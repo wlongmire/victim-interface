@@ -166,29 +166,29 @@ export const Button = styled.button`
   font-size: 1.125rem;
   border: none;
   border-radius: 0.25em;
-    background: ${({ selected, bg }) =>
-      selected ? bg : 'transparent'};
-    color: ${({ selected, bg }) =>
-      selected ? '#fff' : bg};
-    border: 2px solid ${({ bg }) => bg};
-    border-radius: 8px;
-    padding: 0.5em 1.2em;
-    margin: 0.3em 0.5em;
-    font-size: 1.1em;
-    font-weight: 500;
+  background: ${({ selected, bg }) =>
+    selected ? bg : 'transparent'};
+  color: ${({ selected, bg }) =>
+    selected ? '#fff' : bg};
+  border: 2px solid ${({ bg }) => bg};
+  border-radius: 8px;
+  padding: 0.5em 1.2em;
+  margin: 0.3em 0.5em;
+  font-size: 1.1em;
+  font-weight: 500;
   cursor: ${({ selected }) => (selected ? 'default' : 'pointer')};
-    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-    box-shadow: ${({ selected }) =>
-      selected ? '0 0 0 2px rgba(0,0,0,0.08)' : 'none'};
+  transition: background 0.5s cubic-bezier(0.4,0,0.2,1), color 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: ${({ selected }) =>
+    selected ? '0 0 0 2px rgba(0,0,0,0.08)' : 'none'};
 
-    &:hover {
-      ${({ selected, bg }) =>
-        !selected && `
-          background: ${bg ? bg + '80' : 'rgba(0,0,0,0.5)'};
-          color: #fff;
-          box-shadow: 0 0 0 2px rgba(0,0,0,0.065);
-        `}
-    }
+  &:hover {
+    ${({ selected, bg }) =>
+      !selected && `
+        background: ${bg ? bg + '80' : 'rgba(0,0,0,0.5)'};
+        color: #fff;
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.065);
+      `}
+  }
 `;
 
 export const PoemPanel = styled.div`
