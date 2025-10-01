@@ -71,10 +71,10 @@ export default function VictimInterface() {
 	const subjectPanelOpacity = increaseOpacity(subjectFlickerOpacity);
 	const objectPanelOpacity = increaseOpacity(objectFlickerOpacity);
 
-	const poemStage = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
+	const poemStage = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
 	const poem = poemStage?.poem || [];
 
-	const descStage = stages[pronounState.subject.toLowerCase()]?.[pronounState.object.toLowerCase()];
+	const descStage = stages[normalizePronoun(pronounState.subject)]?.[normalizePronoun(pronounState.object)];
 	
     const leftPanel = descStage?.left || {};
 	const centerPanel = descStage?.center || {};
@@ -83,7 +83,12 @@ export default function VictimInterface() {
     const subjectDescription = descStage?.subjectDescription || "";
 	const objectDescription = descStage?.objectDescription || "";
 
-	const pronouns = ["I", "You", "They"];
+	const pronouns = ["I", "You", "Them"];
+
+	// Map display 'Them' to data key 'they'
+	function normalizePronoun(p) {
+		return p.toLowerCase() === 'them' ? 'they' : p.toLowerCase();
+	}
 
 	function handlePronounChange(type, value) {
 		if (isLocked) return; // Prevent ALL input during animation
@@ -175,7 +180,7 @@ export default function VictimInterface() {
 						setTimeout(() => {
 							setPoemOpacity(1);
 							// Play sound exactly when poem appears, and set loop if needed
-							const stageData = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
+							const stageData = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
 							if (audioRef.current && stageData?.sound) {
 								audioRef.current.pause();
 								audioRef.current.currentTime = 0;
