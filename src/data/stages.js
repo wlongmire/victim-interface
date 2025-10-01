@@ -27,6 +27,8 @@ export const stages = {
           colorMode:"black",
           videoSrc: we_i
         },
+         sound: '/audio/i-i.mp3',
+         soundLoop: true,
         subjectDescription:"THE SUBJECT IS A VICTIM OF THE OBJECTIFICATION I DO TO MYSELF.",
         objectDescription:"THE READER IS AN OBJECT IN A MOVIE OF THEMSELF GETTING SHOT.",
         poem: [
@@ -62,9 +64,11 @@ export const stages = {
           showVideo:false,
           colorMode:"black"
         },
-        subjectDescription:"THE SUBJECT IS THE AUTHOR OBJECTING TO THE OBJECT YOU PUT ME IN.",
-        objectDescription:"THE READER IS AN OBJECT YOU VICTIMIZED AND THAT'S HOW YOU GOT SHOT.",
-        poem: [
+                sound: '/audio/i-you.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECT IS THE AUTHOR OBJECTING TO THE OBJECT YOU PUT ME IN.",
+  objectDescription:"THE READER IS AN OBJECT YOU VICTIMIZED AND THAT'S HOW YOU GOT SHOT.",
+  poem: [
           "{I} am the monster",
           "the moment [you] say",
           "{I} am. Shoot {me}",
@@ -98,9 +102,11 @@ export const stages = {
           colorMode:"black",
           videoSrc: we_you
         },
-        subjectDescription:"THE SUBJECT IS THE VICTIM THAT IS FRAMED BY THE OBJECTS.",
-        objectDescription:"THE READER IS NOT THEM. THEY ARE OBJECTS THAT LIVE NEAR ME. I AM THE ONE WHO WAS SHOT.",
-        poem: [
+                sound: '/audio/i-they.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECT IS THE VICTIM THAT IS FRAMED BY THE OBJECTS.",
+  objectDescription:"THE READER IS NOT THEM. THEY ARE OBJECTS THAT LIVE NEAR ME. I AM THE ONE WHO WAS SHOT.",
+  poem: [
           "{I} am the monster",
           "the moment",
           "[they] say {I} am.",
@@ -138,9 +144,11 @@ export const stages = {
           colorMode:"black",
           videoSrc: you_i
         },
-        subjectDescription:"THE SUBJECT IS ME SHOOTING AN OBJECT THAT LOOKS LIKE YOU.",
-        objectDescription:"THE READER LOOKS AT THEMSELF GETTING SHOT. THINKING THEY ARE A VICTIM BUT NEVER OBJECTING.",
-        poem: [
+                sound: '/audio/you-i.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECT IS ME SHOOTING AN OBJECT THAT LOOKS LIKE YOU.",
+  objectDescription:"THE READER LOOKS AT THEMSELF GETTING SHOT. THINKING THEY ARE A VICTIM BUT NEVER OBJECTING.",
+  poem: [
           "{You} are the monster",
           "the moment [I] say so. {Your}",
           "dark mouth opens wide and",
@@ -173,9 +181,11 @@ export const stages = {
           showVideo:false,
           colorMode:"black"
         },
-        subjectDescription:"THE SUBJECT OF BEING A VICTIM IS OBJECTIVE TO YOU.",
-        objectDescription:"THE READER IS THE OBJECT SHOOTING AND THE SHOOTING OBJECT IS A VERSION OF YOURSELF.",
-        poem: [
+                sound: '/audio/you-you.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECT OF BEING A VICTIM IS OBJECTIVE TO YOU.",
+  objectDescription:"THE READER IS THE OBJECT SHOOTING AND THE SHOOTING OBJECT IS A VERSION OF YOURSELF.",
+  poem: [
           "{You} became a monster",
           "the moment {you} became",
           "[yourself]. While shooting",
@@ -208,9 +218,11 @@ export const stages = {
           colorMode:"black",
           videoSrc: you_we
         },
-        subjectDescription:"THE SUBJECT IS YOU, OPENING YOUR MOUTH WHILE THEY OBJECT.",
-        objectDescription:"THE READER IS AN OBJECT THEY WATCH AT A DISTANCE, SHAKING THEIR HEADS AS YOU GET SHOT.",
-        poem: [
+                sound: '/audio/you-they.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECT IS YOU, OPENING YOUR MOUTH WHILE THEY OBJECT.",
+  objectDescription:"THE READER IS AN OBJECT THEY WATCH AT A DISTANCE, SHAKING THEIR HEADS AS YOU GET SHOT.",
+  poem: [
           "{You} are a monster",
           "the moment",
           "[they] say {you} are.",
@@ -248,9 +260,11 @@ export const stages = {
           colorMode:"black",
           videoSrc: you_i
         },
-        subjectDescription:"THE SUBJECTS ARE AUTHORS THAT THINK THEY ARE VICTIMS.",
-        objectDescription:"THE READER IS THE VICTIM THEY STALK UNTIL THE DAY YOU PICK UP AN OBJECT AND SHOOT.",
-        poem: [
+                sound: '/audio/they-i.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECTS ARE AUTHORS THAT THINK THEY ARE VICTIMS.",
+  objectDescription:"THE READER IS THE VICTIM THEY STALK UNTIL THE DAY YOU PICK UP AN OBJECT AND SHOOT.",
+  poem: [
           "{They} are monsters.",
           "The moment [I] say",
           "shoot, the forever dark",
@@ -283,9 +297,11 @@ export const stages = {
           showVideo:false,
           colorMode:"black"
         },
-        subjectDescription:"THE SUBJECTS ARE THE VICTIMS THAT GOT SHOT WHEN YOU TURNED OFF YOUR MOVIE.",
-        objectDescription:"THE READER OBJECTS TO THE VICTIMISATION THEY ARE HOLDING ONTO. IT IS NOT YOUR FAULT THEY SHOT THEMSELVES.",
-        poem: [
+                sound: '/audio/they-you.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECTS ARE THE VICTIMS THAT GOT SHOT WHEN YOU TURNED OFF YOUR MOVIE.",
+  objectDescription:"THE READER OBJECTS TO THE VICTIMISATION THEY ARE HOLDING ONTO. IT IS NOT YOUR FAULT THEY SHOT THEMSELVES.",
+  poem: [
           "{They} are the monsters",
           "the moment [you] said",
           "{they} were.",
@@ -320,11 +336,13 @@ export const stages = {
           colorMode:"black",
           videoSrc: we_we
         },
-        subjectDescription:"THE SUBJECTS ARE OBJECTS THAT SURROUND OUR READER'S VICTIMHOOD.",
-        objectDescription:"THE OBJECTS THE READERS ARE WATCHING IS A MOVIE BEING SHOT.",
-        poem: [
+                sound: '/audio/they-they.mp3',
+                soundLoop: true,
+  subjectDescription:"THE SUBJECTS ARE OBJECTS THAT SURROUND OUR READER'S VICTIMHOOD.",
+  objectDescription:"THE OBJECTS THE READERS ARE WATCHING IS A MOVIE BEING SHOT.",
+  poem: [
           "{They} are the monsters",
-          "[they] said so themselves",
+          "[they] said so [themselves]",
           "that moment.",
           "",
           "{They} shot [themselves].",

@@ -140,9 +140,9 @@ export const Description = styled.p`
   text-align: left;
   line-height: 1.3;
   width: 75%;
-  transition: opacity 1s;
+  transition: opacity 2.5s;
   &.fade-out {
-    transition: opacity 1s;
+    transition: opacity 2.5s;
   }
 `;
 

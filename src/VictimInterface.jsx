@@ -1,4 +1,6 @@
-import { useState, useRef } from "react";
+import SoundIcon from './icons/SoundIcon.jsx';
+
+import { useState, useRef, useEffect } from "react";
 import useFlickerOpacity from './utils/useFlickerOpacity';
 
 import renderPoemLine from './utils/renderPoemLine';
@@ -20,6 +22,7 @@ import { PronounPanel } from "./Panels";
 import RepeatedText from './utils/repeatedText';
 
 export default function VictimInterface() {
+	const audioRef = useRef(null);
 	const [pronounState, setPronounState] = useState({
 		subject: "I",
 		object: "I",
@@ -56,7 +59,6 @@ export default function VictimInterface() {
 	const [objectHeading, setObjectHeading] = useState([{char: 'I', visible: true}]);
 	const [isAnimatingHeading, setIsAnimatingHeading] = useState(false);
 	const [isLocked, setIsLocked] = useState(false);
-	const headingAnimTimeout = useRef(null);
 	const headingAnimTimers = useRef([]);
 
 	const [interfaceOpacityIncrease] = useState(0.8)
@@ -68,8 +70,6 @@ export default function VictimInterface() {
 	}
 	const subjectPanelOpacity = increaseOpacity(subjectFlickerOpacity);
 	const objectPanelOpacity = increaseOpacity(objectFlickerOpacity);
-
-	const fadeTimeout = useRef(null);
 
 	const poemStage = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
 	const poem = poemStage?.poem || [];
@@ -87,12 +87,36 @@ export default function VictimInterface() {
 
 	function handlePronounChange(type, value) {
 		if (isLocked) return; // Prevent ALL input during animation
+		// Fade out any currently playing audio over 1 second
+		if (audioRef.current && !audioRef.current.paused && audioRef.current.volume > 0) {
+			const fadeDuration = 1000; // ms
+			const fadeSteps = 20;
+			const fadeStepTime = fadeDuration / fadeSteps;
+			let currentStep = 0;
+			const originalVolume = audioRef.current.volume;
+			const fadeOut = () => {
+				currentStep++;
+				const newVolume = Math.max(0, originalVolume * (1 - currentStep / fadeSteps));
+				audioRef.current.volume = newVolume;
+				if (currentStep < fadeSteps) {
+					setTimeout(fadeOut, fadeStepTime);
+				} else {
+					audioRef.current.pause();
+					audioRef.current.currentTime = 0;
+					audioRef.current.volume = originalVolume;
+				}
+			};
+			fadeOut();
+		} else if (audioRef.current) {
+			audioRef.current.pause();
+			audioRef.current.currentTime = 0;
+		}
 		setIsLocked(true);
 		// === Animation Timing Constants (adjust here) ===
 		const LETTER_ANIM_MS = 500; // ms per letter fade in/out
 		const WAIT_AFTER_REMOVE_MS = 1500; // ms to wait after all letters removed
-	    const DESC_FADE_IN_GAP_MS = 2000; // ms between subject and object desc fade in
-		const POEM_FADE_IN_MS = 2000; // ms for poem fade in
+	    const DESC_FADE_IN_GAP_MS = 3000; // ms between subject and object desc fade in
+		const POEM_FADE_IN_MS = 4000; // ms for poem fade in
 		const VIDEO_FADE_IN_MIN_MS = 2000; // ms min for video fade in
 		const VIDEO_FADE_IN_RANGE_MS = 2000; // ms random range for video fade in
 		// ==============================================
@@ -150,6 +174,15 @@ export default function VictimInterface() {
 						setObjectDescOpacity(1);
 						setTimeout(() => {
 							setPoemOpacity(1);
+							// Play sound exactly when poem appears, and set loop if needed
+							const stageData = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
+							if (audioRef.current && stageData?.sound) {
+								audioRef.current.pause();
+								audioRef.current.currentTime = 0;
+								audioRef.current.src = stageData.sound;
+								audioRef.current.loop = true;
+								audioRef.current.play().catch(() => {});
+							}
 							// Wait for all video fade-ins to finish before unlocking
 							const maxVideoFade = VIDEO_FADE_IN_MIN_MS + VIDEO_FADE_IN_RANGE_MS;
 							setTimeout(() => setLeftVideoOpacity(1), maxVideoFade);
@@ -200,6 +233,8 @@ export default function VictimInterface() {
 				height: '100vh',
 			}}
 		>
+			{/* Hidden audio element for stage incantation */}
+			<audio ref={audioRef} style={{ display: 'none' }} preload="auto" />
 			<Header>
 				<RepeatedText text="Victim Interface " />
 			</Header>
@@ -232,37 +267,86 @@ export default function VictimInterface() {
 					isLocked={isLocked}
 				/>
 
-				<PoemPanel
-					bg={centerPanel.colorMode === "black" ? "#000" : "#fff"}
-					style={{position: 'relative', overflow: 'hidden'}}
-				>
-                    <VideoOrBlank showVideo={centerPanel.showVideo} videoSrc={centerPanel.videoSrc} blankColor={centerPanel.colorMode === "black" ? "#000" : "#fff"} opacity={centerVideoOpacity} />
-					
-                    <div style={{
-						position: 'relative',
-						zIndex: 1,
-						width: '100%',
-						height: '100%',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}>
-						<Poem color={centerPanel.colorMode === "black" ? "#fff" : "#000"} $opacity={poemOpacity}>
-							{poem.map((line, idx) =>
-                                renderPoemLine(
-                                    line,
-                                    idx,
-                                    subjectColor,
-                                    subjectFlickerOpacity,
-                                    objectColor,
-                                    objectFlickerOpacity,
-                                    PoemWord
-                                )
-                            )}
-						</Poem>
-					</div>
-				</PoemPanel>
+				   <PoemPanel
+					   bg={centerPanel.colorMode === "black" ? "#000" : "#fff"}
+					   style={{position: 'relative', overflow: 'hidden'}}
+				   >
+					   <VideoOrBlank showVideo={centerPanel.showVideo} videoSrc={centerPanel.videoSrc} blankColor={centerPanel.colorMode === "black" ? "#000" : "#fff"} opacity={centerVideoOpacity} />
+					   <div style={{
+						   position: 'relative',
+						   zIndex: 1,
+						   width: '100%',
+						   height: '100%',
+						   display: 'flex',
+						   flexDirection: 'column',
+						   alignItems: 'center',
+						   justifyContent: 'center',
+					   }}>
+						    <Poem color={centerPanel.colorMode === "black" ? "#fff" : "#000"} $opacity={poemOpacity}>
+							   {poem.map((line, idx) =>
+									renderPoemLine(
+										line,
+										idx,
+										subjectColor,
+										subjectFlickerOpacity,
+										objectColor,
+										objectFlickerOpacity,
+										PoemWord
+									)
+								)}
+						    </Poem>
+						    {/* Sound icon button at bottom center */}
+                            {/* Dim toggle for sound icon */}
+                            {(() => {
+                                // Initialize from localStorage if available
+                                const getInitialDimmed = () => {
+                                    try {
+                                        const stored = localStorage.getItem('victim-mute');
+                                        return stored === 'true';
+                                    } catch {
+                                        return false;
+                                    }
+                                };
+                                const [isDimmed, setIsDimmed] = useState(getInitialDimmed);
+                                // Effect to sync audio mute with dim state
+                                useEffect(() => {
+                                    if (audioRef.current) {
+                                        audioRef.current.muted = isDimmed;
+                                    }
+                                    try {
+                                        localStorage.setItem('victim-mute', isDimmed ? 'true' : 'false');
+                                    } catch {}
+                                }, [isDimmed]);
+                                return (
+                                    <button
+                                        style={{
+                                            position: 'absolute',
+                                            left: '50%',
+                                            bottom: 38,
+                                            transform: 'translateX(-50%)',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            borderRadius: '50%',
+                                            width: 36,
+                                            height: 36,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+                                            padding: 0,
+                                            zIndex: 1002
+                                        }}
+                                        tabIndex={0}
+                                        aria-label={isDimmed ? "Sound off (dimmed)" : "Sound on (full)"}
+                                        onClick={() => setIsDimmed(d => !d)}
+                                    >
+                                        <SoundIcon opacity={isDimmed ? 0.45 : 1} />
+                                    </button>
+                                );
+                            })()}
+					   </div>
+				   </PoemPanel>
 
 				<PronounPanel
 					showVideo={rightPanel.showVideo}
