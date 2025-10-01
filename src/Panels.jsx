@@ -19,6 +19,7 @@ export function PronounPanel({
   highlightColor = "#000",
   buttonOpacity = 1,
   blankColor,
+  descriptionOpacity = 1,
 }) {
   const panelBg = "#000";
   const panelColor = baseColor + opacityHex;
@@ -45,7 +46,7 @@ export function PronounPanel({
       }}>
         {children}
         <Title size="5rem" style={{ color: panelColor }}>{selectedPronoun.toUpperCase()}</Title>
-        <Description style={{ color: panelColor }}>{renderDescription(descriptionText, highlightWord, baseColor + opacityHex, highlightColor, Highlight)}</Description>
+        <Description style={{ color: panelColor, opacity: descriptionOpacity }}>{renderDescription(descriptionText, highlightWord, baseColor + opacityHex, highlightColor, Highlight)}</Description>
         <ButtonGroup>
           {pronouns.map((p) => (
             <Button

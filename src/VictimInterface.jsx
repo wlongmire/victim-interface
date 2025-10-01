@@ -26,7 +26,14 @@ export default function VictimInterface() {
 		pendingSubject: "I",
 		pendingObject: "I"
 	});
-	const [poemOpacity, setPoemOpacity] = useState(1);
+
+	// Staged opacities
+	const [subjectDescOpacity, setSubjectDescOpacity] = useState(0);
+	const [objectDescOpacity, setObjectDescOpacity] = useState(0);
+	const [poemOpacity, setPoemOpacity] = useState(0);
+	const [leftVideoOpacity, setLeftVideoOpacity] = useState(0);
+	const [centerVideoOpacity, setCenterVideoOpacity] = useState(0);
+	const [rightVideoOpacity, setRightVideoOpacity] = useState(0);
 
 	const [subjectColor] = useState("#c593d4");
 	const [objectColor] = useState("#93bad4");
@@ -70,16 +77,30 @@ export default function VictimInterface() {
 			...prev,
 			[type]: value
 		}));
-        
+
+		// Reset all opacities to 0
+		setSubjectDescOpacity(0);
+		setObjectDescOpacity(0);
 		setPoemOpacity(0);
+		setLeftVideoOpacity(0);
+		setCenterVideoOpacity(0);
+		setRightVideoOpacity(0);
+
 		if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+
+		// Staged fade-in sequence
 		fadeTimeout.current = setTimeout(() => {
-			setPronounState(prev => ({
-				...prev,
-				[type === "subject" ? "pendingSubject" : "pendingObject"]: value
-			}));
-			setPoemOpacity(1);
-		}, 1000);
+			setSubjectDescOpacity(1);
+			setTimeout(() => {
+				setObjectDescOpacity(1);
+				setTimeout(() => {
+					setTimeout(() => setPoemOpacity(1), Math.random() * 2000);
+					setTimeout(() => setLeftVideoOpacity(1), 1000 + Math.random() * 2000);
+					setTimeout(() => setCenterVideoOpacity(1), 500 + Math.random() * 2000);
+					setTimeout(() => setRightVideoOpacity(1), 1000 + Math.random() * 2000);
+				}, 1000);
+			}, 2000);
+		}, 2000);
 	}
 
 	// Shared flicker handlers
@@ -116,7 +137,8 @@ export default function VictimInterface() {
 					onPronounSelect={v => handlePronounChange("subject", v)}
 					descriptionText={subjectDescription}
                     highlightWord={"Subject"}
-					videoOpacity={poemOpacity}
+					videoOpacity={leftVideoOpacity}
+					descriptionOpacity={subjectDescOpacity}
 					onMouseEnter={handlePanelMouseEnter}
 					onMouseLeave={handlePanelMouseLeave}
 				/>
@@ -125,7 +147,7 @@ export default function VictimInterface() {
 					bg={centerPanel.colorMode === "black" ? "#000" : "#fff"}
 					style={{position: 'relative', overflow: 'hidden'}}
 				>
-                    <VideoOrBlank showVideo={centerPanel.showVideo} videoSrc={centerPanel.videoSrc} blankColor={centerPanel.colorMode === "black" ? "#000" : "#fff"} opacity={poemOpacity} />
+                    <VideoOrBlank showVideo={centerPanel.showVideo} videoSrc={centerPanel.videoSrc} blankColor={centerPanel.colorMode === "black" ? "#000" : "#fff"} opacity={centerVideoOpacity} />
 					
                     <div style={{
 						position: 'relative',
@@ -164,7 +186,8 @@ export default function VictimInterface() {
 					onPronounSelect={v => handlePronounChange("object", v)}
 					descriptionText={objectDescription}
                     highlightWord={"Object"}
-					videoOpacity={poemOpacity}
+					videoOpacity={rightVideoOpacity}
+					descriptionOpacity={objectDescOpacity}
 					onMouseEnter={handlePanelMouseEnter}
 					onMouseLeave={handlePanelMouseLeave}
 				/>
