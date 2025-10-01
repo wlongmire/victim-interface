@@ -176,7 +176,7 @@ export const Button = styled.button`
     margin: 0.3em 0.5em;
     font-size: 1.1em;
     font-weight: 500;
-    cursor: pointer;
+  cursor: ${({ selected }) => (selected ? 'default' : 'pointer')};
     transition: background 0.18s, color 0.18s, box-shadow 0.18s;
     box-shadow: ${({ selected }) =>
       selected ? '0 0 0 2px rgba(0,0,0,0.08)' : 'none'};

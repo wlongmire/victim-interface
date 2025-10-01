@@ -1,4 +1,5 @@
 import { Panel, Title, Description, Highlight, ButtonGroup, Button } from "./VictimInterface.styled";
+import React from "react";
 import VideoOrBlank from "./VideoOrBlank";
 import renderDescription from "./utils/renderDescription"
 
@@ -20,6 +21,8 @@ export function PronounPanel({
   buttonOpacity = 1,
   blankColor,
   descriptionOpacity = 1,
+  displayedHeading,
+  overlayOpacity = 0,
 }) {
   const panelBg = "#000";
   const panelColor = baseColor + opacityHex;
@@ -33,6 +36,19 @@ export function PronounPanel({
   return (
     <Panel bg={panelBg} color={panelColor} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <VideoOrBlank showVideo={showVideo} videoSrc={videoSrc} blankColor={blankColor || panelBg} opacity={videoOpacity} />
+      {/* Overlay above video, below content */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'rgba(0,0,0,1)',
+        opacity: overlayOpacity,
+        pointerEvents: 'none',
+        zIndex: 1,
+        transition: 'opacity 0.3s',
+      }} />
       <div style={{
         position: 'relative',
         zIndex: 1,
@@ -45,7 +61,22 @@ export function PronounPanel({
         justifyContent: 'center',
       }}>
         {children}
-        <Title size="5rem" style={{ color: panelColor }}>{selectedPronoun.toUpperCase()}</Title>
+        <Title size="5rem" style={{ color: panelColor }}>
+          {Array.isArray(displayedHeading)
+            ? displayedHeading.map((l, i) => (
+                <span
+                  key={i}
+                  style={{
+                    display: 'inline-block',
+                    transition: 'opacity 0.45s',
+                    opacity: l.visible ? 1 : 0,
+                  }}
+                >
+                  {l.char}
+                </span>
+              ))
+            : (displayedHeading ?? selectedPronoun.toUpperCase())}
+        </Title>
         <Description style={{ color: panelColor, opacity: descriptionOpacity }}>{renderDescription(descriptionText, highlightWord, baseColor + opacityHex, highlightColor, Highlight)}</Description>
         <ButtonGroup>
           {pronouns.map((p) => (

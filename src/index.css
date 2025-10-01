@@ -48,8 +48,12 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
-  cursor: pointer;
+  /* Remove global cursor so styled-components can control it */
   transition: border-color 0.25s;
+}
+/* Ensure styled Button cursor is respected */
+.sc-bcXHqe {
+  cursor: inherit !important;
 }
 button:hover {
   border-color: #646cff;

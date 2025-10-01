@@ -43,10 +43,22 @@ export default function VictimInterface() {
 
 
 	const [flickerRange, setFlickerRange] = useState(3);
+	// Overlay opacity for subject/object panels
+	const [subjectOverlay, setSubjectOverlay] = useState(0);
+	const [objectOverlay, setObjectOverlay] = useState(0);
 	const [subjectFlickerOpacity] = useFlickerOpacity(subjectOpacity, flickerRange, 30);
 	const [objectFlickerOpacity] = useFlickerOpacity(objectOpacity, flickerRange, 35);
 
-    const [interfaceOpacityIncrease] = useState(0.8)
+
+	// For animated heading
+	// Each heading is an array of {char, visible}
+	const [subjectHeading, setSubjectHeading] = useState([{char: 'I', visible: true}]);
+	const [objectHeading, setObjectHeading] = useState([{char: 'I', visible: true}]);
+	const [isAnimatingHeading, setIsAnimatingHeading] = useState(false);
+	const headingAnimTimeout = useRef(null);
+	const headingAnimTimers = useRef([]);
+
+	const [interfaceOpacityIncrease] = useState(0.8)
 
 	function increaseOpacity(hex) {
 		const dec = parseInt(hex, 16);
@@ -73,41 +85,105 @@ export default function VictimInterface() {
 	const pronouns = ["I", "You", "They"];
 
 	function handlePronounChange(type, value) {
-		// Fade out all UI
+		// === Animation Timing Constants (adjust here) ===
+		const LETTER_ANIM_MS = 500; // ms per letter fade in/out
+		const WAIT_AFTER_REMOVE_MS = 1500; // ms to wait after all letters removed
+	    const DESC_FADE_IN_GAP_MS = 2000; // ms between subject and object desc fade in
+		const POEM_FADE_IN_MS = 2000; // ms for poem fade in
+		const VIDEO_FADE_IN_MIN_MS = 2000; // ms min for video fade in
+		const VIDEO_FADE_IN_RANGE_MS = 2000; // ms random range for video fade in
+		// ==============================================
+
+		// Cancel any running heading animation
+		headingAnimTimers.current.forEach(t => clearTimeout(t));
+		headingAnimTimers.current = [];
+		setIsAnimatingHeading(true);
+
+		// Animate heading removal letter by letter
+		const oldPronoun = type === "subject" ? pronounState.subject : pronounState.object;
+		const setHeading = type === "subject" ? setSubjectHeading : setObjectHeading;
+
+		const fullPronoun = oldPronoun.toUpperCase();
+
+		let removeTimers = [];
+		const letterAnimMs = LETTER_ANIM_MS;
+
+		// Start with all visible
+		setHeading(fullPronoun.split('').map(c => ({char: c, visible: true})));
+
+		for (let i = 0; i < fullPronoun.length; ++i) {
+			removeTimers.push(setTimeout(() => {
+				setHeading(prev => prev.map((l, idx) => idx === i ? {...l, visible: false} : l));
+			}, i * letterAnimMs));
+		}
+
+		// After all letters removed, wait, then reveal new heading letter by letter
+		const totalRemove = fullPronoun.length * letterAnimMs;
+		removeTimers.push(setTimeout(() => {
+			setHeading(fullPronoun.split('').map(c => ({char: c, visible: false})));
+
+			const afterRemove = setTimeout(() => {
+				setPronounState(prev => ({
+					...prev,
+					[type]: value,
+					[type === "subject" ? "pendingSubject" : "pendingObject"]: value
+				}));
+				// Animate reveal
+				const newPronoun = value.toUpperCase();
+
+				// Start with all invisible
+				setHeading(newPronoun.split('').map(c => ({char: c, visible: false})));
+				for (let i = 0; i < newPronoun.length; ++i) {
+					headingAnimTimers.current.push(setTimeout(() => {
+						setHeading(prev => prev.map((l, idx) => idx === i ? {...l, visible: true} : l));
+					}, i * letterAnimMs));
+				}
+
+				// After reveal, start fade-in sequence
+				headingAnimTimers.current.push(setTimeout(() => {
+					setIsAnimatingHeading(false);
+					setSubjectDescOpacity(1);
+					setTimeout(() => {
+						setObjectDescOpacity(1);
+						setTimeout(() => {
+							setPoemOpacity(1);
+							setTimeout(() => setLeftVideoOpacity(1), VIDEO_FADE_IN_MIN_MS + Math.random() * VIDEO_FADE_IN_RANGE_MS);
+							setTimeout(() => setCenterVideoOpacity(1), VIDEO_FADE_IN_MIN_MS + Math.random() * VIDEO_FADE_IN_RANGE_MS);
+							setTimeout(() => setRightVideoOpacity(1), VIDEO_FADE_IN_MIN_MS + Math.random() * VIDEO_FADE_IN_RANGE_MS);
+						}, POEM_FADE_IN_MS);
+					}, DESC_FADE_IN_GAP_MS);
+				}, newPronoun.length * letterAnimMs));
+			}, WAIT_AFTER_REMOVE_MS);
+			headingAnimTimers.current.push(afterRemove);
+		}, totalRemove));
+		headingAnimTimers.current = removeTimers;
+
+		// Fade out all UI immediately
 		setSubjectDescOpacity(0);
 		setObjectDescOpacity(0);
 		setPoemOpacity(0);
 		setLeftVideoOpacity(0);
 		setCenterVideoOpacity(0);
 		setRightVideoOpacity(0);
-
-		if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
-
-		// After fade-out, update pronounState and fade in new content
-		fadeTimeout.current = setTimeout(() => {
-			setPronounState(prev => ({
-				...prev,
-				[type]: value,
-				[type === "subject" ? "pendingSubject" : "pendingObject"]: value
-			}));
-
-			// Staged fade-in sequence (same as before, but after content update)
-			setSubjectDescOpacity(1);
-			setTimeout(() => {
-				setObjectDescOpacity(1);
-				setTimeout(() => {
-					setPoemOpacity(1);
-					setTimeout(() => setLeftVideoOpacity(1), 200 + Math.random() * 100);
-					setTimeout(() => setCenterVideoOpacity(1), 200 + Math.random() * 100);
-					setTimeout(() => setRightVideoOpacity(1), 200 + Math.random() * 100);
-				}, 300);
-			}, 500);
-		}, 1000); // Wait for fade-out to complete
 	}
 
 	// Shared flicker handlers
-	const handlePanelMouseEnter = () => setFlickerRange(10);
-	const handlePanelMouseLeave = () => setFlickerRange(2);
+	const handleSubjectPanelMouseEnter = () => {
+		setFlickerRange(10);
+		setSubjectOverlay(0.6);
+	};
+	const handleSubjectPanelMouseLeave = () => {
+		setFlickerRange(2);
+		setSubjectOverlay(0);
+	};
+	const handleObjectPanelMouseEnter = () => {
+		setFlickerRange(10);
+		setObjectOverlay(0.6);
+	};
+	const handleObjectPanelMouseLeave = () => {
+		setFlickerRange(2);
+		setObjectOverlay(0);
+	};
 
 	return (
 		<div
@@ -117,15 +193,15 @@ export default function VictimInterface() {
 			}}
 		>
 			<Header>
-				<RepeatedText text="Untitled American Victim " />
+				<RepeatedText text="Victim Interface " />
 			</Header>
 
 			<LeftBranding>
-				<RepeatedText text="Untitled American Victim " vertical />
+				<RepeatedText text="Victim Interface " vertical />
 			</LeftBranding>
 
 			<RightBranding>
-				<RepeatedText text="Untitled American Victim " vertical />
+				<RepeatedText text="Victim Interface " vertical />
 			</RightBranding>
 
 			<Container>
@@ -138,11 +214,13 @@ export default function VictimInterface() {
 					opacityHex={subjectPanelOpacity}
 					onPronounSelect={v => handlePronounChange("subject", v)}
 					descriptionText={subjectDescription}
-                    highlightWord={"Subject"}
+					highlightWord={"Subject"}
 					videoOpacity={leftVideoOpacity}
 					descriptionOpacity={subjectDescOpacity}
-					onMouseEnter={handlePanelMouseEnter}
-					onMouseLeave={handlePanelMouseLeave}
+					onMouseEnter={handleSubjectPanelMouseEnter}
+					onMouseLeave={handleSubjectPanelMouseLeave}
+					displayedHeading={subjectHeading}
+					overlayOpacity={subjectOverlay}
 				/>
 
 				<PoemPanel
@@ -187,16 +265,18 @@ export default function VictimInterface() {
 					selectedPronoun={pronounState.object}
 					onPronounSelect={v => handlePronounChange("object", v)}
 					descriptionText={objectDescription}
-                    highlightWord={"Object"}
+					highlightWord={"Object"}
 					videoOpacity={rightVideoOpacity}
 					descriptionOpacity={objectDescOpacity}
-					onMouseEnter={handlePanelMouseEnter}
-					onMouseLeave={handlePanelMouseLeave}
+					onMouseEnter={handleObjectPanelMouseEnter}
+					onMouseLeave={handleObjectPanelMouseLeave}
+					displayedHeading={objectHeading}
+					overlayOpacity={objectOverlay}
 				/>
 			</Container>
 
 			<Footer>
-				<RepeatedText text="Untitled American Victim " />
+				<RepeatedText text="Victim Interface " />
 			</Footer>
 		</div>
 	);
