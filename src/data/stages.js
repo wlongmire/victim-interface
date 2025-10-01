@@ -267,7 +267,7 @@ export const stages = {
   poem: [
           "{They} are monsters.",
           "The moment [I] say",
-          "shoot, the forever dark",
+          "shoot, the dark forever",
           "",
           "in {their} heads shows",
           "and waits",
@@ -339,7 +339,7 @@ export const stages = {
                 sound: '/audio/they-they.mp3',
                 soundLoop: true,
   subjectDescription:"THE SUBJECTS ARE OBJECTS THAT SURROUND OUR READER'S VICTIMHOOD.",
-  objectDescription:"THE OBJECTS THE READERS ARE WATCHING IS A MOVIE BEING SHOT.",
+  objectDescription:"THE OBJECTS THE READERS ARE WATCHING ARE IN A MOVIE BEING SHOT.",
   poem: [
           "{They} are the monsters",
           "[they] said so [themselves]",
