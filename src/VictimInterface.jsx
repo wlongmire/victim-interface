@@ -21,6 +21,8 @@ import VideoOrBlank from "./VideoOrBlank";
 import { PronounPanel } from "./Panels";
 import RepeatedText from './utils/repeatedText';
 
+const TIMEOUT_RESET = 60000 * 3;
+
 export default function VictimInterface() {
 	const audioRef = useRef(null);
 	const [pronounState, setPronounState] = useState({
@@ -86,6 +88,7 @@ export default function VictimInterface() {
 	const objectDescription = descStage?.objectDescription || "";
 
 	const pronouns = ["I", "You", "Them"];
+	const initialPoemFadeIn = useRef();
 
 	// Map display 'Them' to data key 'they'
 	function normalizePronoun(p) {
@@ -94,6 +97,9 @@ export default function VictimInterface() {
 
 	function handlePronounChange(type, value) {
 		if (isLocked) return; // Prevent ALL input during animation
+
+		clearTimeout(initialPoemFadeIn.current);
+
 		// Fade out any currently playing audio over 1 second
 		if (audioRef.current && !audioRef.current.paused && audioRef.current.volume > 0) {
 			const fadeDuration = 1000; // ms
@@ -262,10 +268,36 @@ export default function VictimInterface() {
 	};
 
 	useEffect(()=>{
-		setTimeout(()=> {
+		initialPoemFadeIn.current = setTimeout(()=> {
 			setWhitePoemOpacity(1);
 		}, 3000);
-		
+		console.log("initialPoemFadeIn", initialPoemFadeIn);
+	}, []);
+
+	useEffect(() => {
+		let timeoutId;
+		const resetTimer = () => {
+			if (timeoutId) clearTimeout(timeoutId);
+			timeoutId = setTimeout(() => {
+				setSubjectDescOpacity(0);
+				setObjectDescOpacity(0);
+				setPoemOpacity(0);
+				setWhitePoemOpacity(0);
+				setLeftVideoOpacity(0);
+				setCenterVideoOpacity(0);
+				setRightVideoOpacity(0);
+
+				setTimeout(()=> {
+					window.location.reload();
+				}, 3000)
+			}, TIMEOUT_RESET); // 3mins
+		};
+		window.addEventListener('mousemove', resetTimer);
+		resetTimer(); // start timer on mount
+		return () => {
+			window.removeEventListener('mousemove', resetTimer);
+			if (timeoutId) clearTimeout(timeoutId);
+		};
 	}, []);
 
 	return (
