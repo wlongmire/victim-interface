@@ -1,6 +1,7 @@
 import SoundIcon from './icons/SoundIcon.jsx';
 
 import { useState, useRef, useEffect } from "react";
+import useAudioFadeOut from './utils/useAudioFadeOut';
 import useFlickerOpacity from './utils/useFlickerOpacity';
 
 import renderPoemLine from './utils/renderPoemLine';
@@ -25,6 +26,7 @@ const TIMEOUT_RESET = 60000 * 3;
 
 export default function VictimInterface() {
 	const audioRef = useRef(null);
+	const fadeOutAndStopAudio = useAudioFadeOut(audioRef);
 	const [pronounState, setPronounState] = useState({
 		subject: "I",
 		object: "I",
@@ -101,29 +103,8 @@ export default function VictimInterface() {
 		clearTimeout(initialPoemFadeIn.current);
 
 		// Fade out any currently playing audio over 1 second
-		if (audioRef.current && !audioRef.current.paused && audioRef.current.volume > 0) {
-			const fadeDuration = 1000; // ms
-			const fadeSteps = 20;
-			const fadeStepTime = fadeDuration / fadeSteps;
-			let currentStep = 0;
-			const originalVolume = audioRef.current.volume;
-			const fadeOut = () => {
-				currentStep++;
-				const newVolume = Math.max(0, originalVolume * (1 - currentStep / fadeSteps));
-				audioRef.current.volume = newVolume;
-				if (currentStep < fadeSteps) {
-					setTimeout(fadeOut, fadeStepTime);
-				} else {
-					audioRef.current.pause();
-					audioRef.current.currentTime = 0;
-					audioRef.current.volume = originalVolume;
-				}
-			};
-			fadeOut();
-		} else if (audioRef.current) {
-			audioRef.current.pause();
-			audioRef.current.currentTime = 0;
-		}
+		fadeOutAndStopAudio();
+		
 		setIsLocked(true);
 		// === Animation Timing Constants (adjust here) ===
 		const LETTER_ANIM_MS = 500; // ms per letter fade in/out
