@@ -270,15 +270,15 @@ export const stages = {
           "",
           "in {their} heads shows",
           "and waits",
-          "and yells proudly",
+          "and yells at [me] proudly",
           "",
           "and spreads down",
           "[my] street's middle and",
           "mistakes {their} reasonableness",
           "",
-          "for love and humanity",
-          "for lack and {they} lack and lack",
-          "until at last! At last! At last!"
+          "for love and {their} lack",
+          "for humanity 'til at last!",
+          "at last [I] arrive!"
         ]
       },
       "you":{
@@ -349,7 +349,7 @@ export const stages = {
           "and waited",
           "",
           "until the dark",
-          "passed out",
+          "passed through",
           "[their] shining teeth.",
           "",
           "{They} yelled pride",

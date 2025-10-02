@@ -33,6 +33,8 @@ export default function VictimInterface() {
 	// Staged opacities
 	const [subjectDescOpacity, setSubjectDescOpacity] = useState(0);
 	const [objectDescOpacity, setObjectDescOpacity] = useState(0);
+	const [centerOverlay, setCenterOverlay] = useState(0);
+
 	const [poemOpacity, setPoemOpacity] = useState(0);
 	const [whitePoemOpacity, setWhitePoemOpacity] = useState(0);
 	const [leftVideoOpacity, setLeftVideoOpacity] = useState(0);
@@ -246,6 +248,18 @@ export default function VictimInterface() {
 		setObjectOverlay(0);
 		if (!isLocked) setWhitePoemOpacity(1);
 	};
+	const handleCenterPanelMouseEnter = () => {
+		if (centerPanel.showVideo) {
+			setCenterOverlay(0.4);
+			if (!isLocked) setWhitePoemOpacity(0);
+		}
+	};
+	const handleCenterPanelMouseLeave = () => {
+		if (centerPanel.showVideo) {
+			setCenterOverlay(0);
+			if (!isLocked) setWhitePoemOpacity(1);
+		}
+	};
 
 	useEffect(()=>{
 		setTimeout(()=> {
@@ -298,11 +312,26 @@ export default function VictimInterface() {
 				   <PoemPanel
 					   bg={centerPanel.colorMode === "black" ? "#000" : "#fff"}
 					   style={{position: 'relative', overflow: 'hidden'}}
+					   onMouseEnter={handleCenterPanelMouseEnter}
+					   onMouseLeave={handleCenterPanelMouseLeave}
 				   >
+					   {/* Overlay above video, below content */}
+					   <div style={{
+						   position: 'absolute',
+						   top: 0,
+						   left: 0,
+						   width: '100%',
+						   height: '100%',
+						   background: 'rgba(0,0,0,1)',
+						   opacity: centerPanel.showVideo ? centerOverlay : 0,
+						   pointerEvents: 'none',
+						   zIndex: 1,
+						   transition: 'opacity 0.3s',
+					   }} />
 					   <VideoOrBlank showVideo={centerPanel.showVideo} videoSrc={centerPanel.videoSrc} blankColor={centerPanel.colorMode === "black" ? "#000" : "#fff"} opacity={centerVideoOpacity} />
 					   <div style={{
 						   position: 'relative',
-						   zIndex: 1,
+						   zIndex: 2,
 						   width: '100%',
 						   height: '100%',
 						   display: 'flex',
@@ -336,8 +365,8 @@ export default function VictimInterface() {
 								flexDirection: 'column',
 								alignItems: 'center',
 								justifyContent: 'center',
-								opacity: whitePoemOpacity,
-								transition: 'opacity 3s',
+								opacity: centerPanel.showVideo ? centerOverlay : whitePoemOpacity,
+								transition: 'opacity 0.7s',
 								zIndex: 2
 							}}>
 								<Poem color="#fff" $opacity={1}>
