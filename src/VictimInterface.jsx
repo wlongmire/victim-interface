@@ -45,7 +45,6 @@ export default function VictimInterface() {
 	const [subjectOpacity] = useState("66");
 	const [objectOpacity] = useState("66");
 
-
 	const [flickerRange, setFlickerRange] = useState(3);
 	// Overlay opacity for subject/object panels
 	const [subjectOverlay, setSubjectOverlay] = useState(0);
@@ -216,33 +215,44 @@ export default function VictimInterface() {
 		}, totalRemove));
 		headingAnimTimers.current = removeTimers;
 
-	// Fade out all UI immediately
-	setSubjectDescOpacity(0);
-	setObjectDescOpacity(0);
-	setPoemOpacity(0);
-	setWhitePoemOpacity(0);
-	setLeftVideoOpacity(0);
-	setCenterVideoOpacity(0);
-	setRightVideoOpacity(0);
+		// Fade out all UI immediately
+		setSubjectDescOpacity(0);
+		setObjectDescOpacity(0);
+		setPoemOpacity(0);
+		setWhitePoemOpacity(0);
+		setLeftVideoOpacity(0);
+		setCenterVideoOpacity(0);
+		setRightVideoOpacity(0);
 	}
 
 	// Shared flicker handlers
 	const handleSubjectPanelMouseEnter = () => {
 		setFlickerRange(10);
 		setSubjectOverlay(0.6);
+		if (!isLocked) setWhitePoemOpacity(0);
 	};
 	const handleSubjectPanelMouseLeave = () => {
 		setFlickerRange(2);
 		setSubjectOverlay(0);
+		if (!isLocked) setWhitePoemOpacity(1);
 	};
 	const handleObjectPanelMouseEnter = () => {
 		setFlickerRange(10);
 		setObjectOverlay(0.6);
+		if (!isLocked) setWhitePoemOpacity(0);
 	};
 	const handleObjectPanelMouseLeave = () => {
 		setFlickerRange(2);
 		setObjectOverlay(0);
+		if (!isLocked) setWhitePoemOpacity(1);
 	};
+
+	useEffect(()=>{
+		setTimeout(()=> {
+			setWhitePoemOpacity(1);
+		}, 3000);
+		
+	}, []);
 
 	return (
 		<div
