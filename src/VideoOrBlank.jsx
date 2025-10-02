@@ -1,7 +1,31 @@
+import { useRef, useEffect } from 'react';
+
 export default function VideoOrBlank({ showVideo, videoSrc, blankColor = "#e0e0e0", opacity = 1, ...props }) {
   const transitionStyle = { transition: 'opacity 1s' };
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (showVideo && videoRef.current) {
+      // Randomize start time within first 3 seconds
+      const video = videoRef.current;
+      const setRandomTime = () => {
+        const offset = Math.random() * 3;
+        // If metadata is loaded, set currentTime
+        if (video.readyState >= 1) {
+          video.currentTime = offset;
+        } else {
+          video.addEventListener('loadedmetadata', () => {
+            video.currentTime = offset;
+          }, { once: true });
+        }
+      };
+      setRandomTime();
+    }
+  }, [showVideo, videoSrc]);
+
   return showVideo ? (
     <video
+      ref={videoRef}
       src={videoSrc}
       autoPlay
       loop
