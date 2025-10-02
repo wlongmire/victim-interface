@@ -34,6 +34,7 @@ export default function VictimInterface() {
 	const [subjectDescOpacity, setSubjectDescOpacity] = useState(0);
 	const [objectDescOpacity, setObjectDescOpacity] = useState(0);
 	const [poemOpacity, setPoemOpacity] = useState(0);
+	const [whitePoemOpacity, setWhitePoemOpacity] = useState(0);
 	const [leftVideoOpacity, setLeftVideoOpacity] = useState(0);
 	const [centerVideoOpacity, setCenterVideoOpacity] = useState(0);
 	const [rightVideoOpacity, setRightVideoOpacity] = useState(0);
@@ -179,6 +180,17 @@ export default function VictimInterface() {
 						setObjectDescOpacity(1);
 						setTimeout(() => {
 							setPoemOpacity(1);
+							setTimeout(() => setWhitePoemOpacity(1), 3000); // Fade in white overlay after 3s
+							setTimeout(() => setWhitePoemOpacity(0), 13000); // Fade out after 10s visible + 3s fade
+							// Add 1s delay before switching pronoun state (video fade-in/unlock logic)
+							const extraDelay = 1000;
+							const unlockDelay = VIDEO_FADE_IN_MIN_MS + VIDEO_FADE_IN_RANGE_MS + extraDelay;
+							setTimeout(() => setLeftVideoOpacity(1), unlockDelay);
+							setTimeout(() => setCenterVideoOpacity(1), unlockDelay);
+							setTimeout(() => {
+								setRightVideoOpacity(1);
+								setIsLocked(false); // UNLOCK after all transitions
+							}, unlockDelay);
 							// Play sound exactly when poem appears, and set loop if needed
 							const stageData = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
 							if (audioRef.current && stageData?.sound) {
@@ -204,13 +216,14 @@ export default function VictimInterface() {
 		}, totalRemove));
 		headingAnimTimers.current = removeTimers;
 
-		// Fade out all UI immediately
-		setSubjectDescOpacity(0);
-		setObjectDescOpacity(0);
-		setPoemOpacity(0);
-		setLeftVideoOpacity(0);
-		setCenterVideoOpacity(0);
-		setRightVideoOpacity(0);
+	// Fade out all UI immediately
+	setSubjectDescOpacity(0);
+	setObjectDescOpacity(0);
+	setPoemOpacity(0);
+	setWhitePoemOpacity(0);
+	setLeftVideoOpacity(0);
+	setCenterVideoOpacity(0);
+	setRightVideoOpacity(0);
 	}
 
 	// Shared flicker handlers
@@ -287,7 +300,8 @@ export default function VictimInterface() {
 						   alignItems: 'center',
 						   justifyContent: 'center',
 					   }}>
-						    <Poem color={centerPanel.colorMode === "black" ? "#fff" : "#000"} $opacity={poemOpacity}>
+							{/* Color-coded poem (base layer) */}
+							<Poem color={centerPanel.colorMode === "black" ? "#fff" : "#000"} $opacity={poemOpacity} style={{ transition: 'opacity 3s' }}>
 							   {poem.map((line, idx) =>
 									renderPoemLine(
 										line,
@@ -299,7 +313,37 @@ export default function VictimInterface() {
 										PoemWord
 									)
 								)}
-						    </Poem>
+							</Poem>
+							{/* White overlay poem (fades in above) */}
+							<div style={{
+								position: 'absolute',
+								top: 0,
+								left: 0,
+								width: '100%',
+								height: '100%',
+								pointerEvents: 'none',
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+								justifyContent: 'center',
+								opacity: whitePoemOpacity,
+								transition: 'opacity 3s',
+								zIndex: 2
+							}}>
+								<Poem color="#fff" $opacity={1}>
+									{poem.map((line, idx) =>
+										renderPoemLine(
+											line,
+											idx,
+											"#fff",
+											1,
+											"#fff",
+											1,
+											PoemWord
+										)
+									)}
+								</Poem>
+							</div>
 						    {/* Sound icon button at bottom center */}
                             {/* Dim toggle for sound icon */}
                             {(() => {
