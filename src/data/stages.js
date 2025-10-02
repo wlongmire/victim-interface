@@ -29,7 +29,7 @@ export const stages = {
         },
          sound: '/audio/i-i.mp3',
          soundLoop: true,
-        subjectDescription:"THE SUBJECT IS A VICTIM OF THE OBJECTIFICATION I DO TO MYSELF.",
+        subjectDescription:"THE SUBJECT IS A VICTIM OF THE OBJECT- IFICATION I DO TO MYSELF.",
         objectDescription:"THE READER IS AN OBJECT IN A MOVIE OF THEMSELF GETTING SHOT.",
         poem: [
           "{I} am a monster.",
@@ -149,10 +149,10 @@ export const stages = {
   objectDescription:"THE READER LOOKS AT THEMSELF GETTING SHOT. THINKING THEY ARE A VICTIM BUT NEVER OBJECTING.",
   poem: [
           "{You} are the monster",
-          "the moment [I] say so. {Your}",
-          "dark mouth opens wide and",
+          "the moment [I] saw it:",
+          "{Your} wide mouth opening",
           "",
-          "shoots. [I] show {you}",
+          "shooting darkness. [I] show {you}",
           "[my] teeth when {your} pride",
           "yells.",
           "",
