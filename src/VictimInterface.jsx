@@ -372,22 +372,8 @@ export default function VictimInterface() {
 						   justifyContent: 'center',
 					   }}>
 							{/* Color-coded poem (base layer) */}
-							<Poem
-								color={centerPanel.colorMode === "black" ? "#fff" : "#000"}
-								$opacity={poemOpacity}
-								style={{
-									transition: 'opacity 3s, transform 0.7s',
-									pointerEvents: poemOpacity === 0 ? 'none' : 'auto',
-									transform: (() => {
-										if (typeof window !== 'undefined' && window.innerWidth <= 1075) {
-											return poemOpacity === 0 ? 'translateX(100vw)' : 'translateX(0)';
-										} else {
-											return poemOpacity === 0 ? 'translateY(100vh)' : 'none';
-										}
-									})(),
-								}}
-							>
-								{poem.map((line, idx) =>
+							<Poem color={centerPanel.colorMode === "black" ? "#fff" : "#000"} $opacity={poemOpacity} style={{ transition: 'opacity 3s' }}>
+							   {poem.map((line, idx) =>
 									renderPoemLine(
 										line,
 										idx,
@@ -400,30 +386,21 @@ export default function VictimInterface() {
 								)}
 							</Poem>
 							{/* White overlay poem (fades in above) */}
-							<div
-								style={{
-									position: 'absolute',
-									top: 0,
-									left: 0,
-									width: '100%',
-									height: '100%',
-									pointerEvents: (centerPanel.showVideo ? centerOverlay : whitePoemOpacity) === 0 || poemOpacity === 0 ? 'none' : 'auto',
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									justifyContent: 'center',
-									opacity: centerPanel.showVideo ? centerOverlay : whitePoemOpacity,
-									transition: 'opacity 0.7s, transform 0.7s',
-									zIndex: 2,
-									transform: (() => {
-										if (typeof window !== 'undefined' && window.innerWidth <= 1075) {
-											return poemOpacity === 0 ? 'translateX(100vw)' : 'translateX(0)';
-										} else {
-											return poemOpacity === 0 ? 'translateY(100vh)' : 'none';
-										}
-									})(),
-								}}
-							>
+							<div style={{
+								position: 'absolute',
+								top: 0,
+								left: 0,
+								width: '100%',
+								height: '100%',
+								pointerEvents: 'none',
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+								justifyContent: 'center',
+								opacity: centerPanel.showVideo ? centerOverlay : whitePoemOpacity,
+								transition: 'opacity 0.7s',
+								zIndex: 2
+							}}>
 								<Poem color="#fff" $opacity={1}>
 									{poem.map((line, idx) =>
 										renderPoemLine(
