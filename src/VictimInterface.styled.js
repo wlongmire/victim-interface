@@ -110,6 +110,11 @@ export const Container = styled.div`
   background: #fff;
   color: #000;
   font-family: sans-serif;
+  @media (max-width: 1075px) {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
 `;
 
 export const Panel = styled.div`
@@ -125,6 +130,11 @@ export const Panel = styled.div`
   transition: opacity 1s;
   &.fade-out {
     transition: opacity 1s;
+  }
+  @media (max-width: 1075px) {
+    width: 100vw;
+    min-height: 33vh;
+    padding: 1.5rem 0.5rem;
   }
 `;
 
@@ -143,6 +153,12 @@ export const Description = styled.p`
   transition: opacity 2.5s;
   &.fade-out {
     transition: opacity 2.5s;
+  }
+  @media (max-width: 1075px) {
+    text-align: center;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
   }
 `;
 
@@ -202,6 +218,11 @@ export const PoemPanel = styled.div`
   transition: opacity 1s;
   &.fade-out {
     transition: opacity 1s;
+  }
+  @media (max-width: 1075px) {
+    width: 100vw;
+    min-height: 33vh;
+    padding: 1.5rem 0.5rem;
   }
 `;
 
