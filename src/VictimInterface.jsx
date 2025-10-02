@@ -438,31 +438,44 @@ export default function VictimInterface() {
                                     } catch {}
                                 }, [isDimmed]);
                                 return (
-                                    <button
-                                        style={{
-                                            position: 'absolute',
-                                            left: '50%',
-                                            bottom: 38,
-                                            transform: 'translateX(-50%)',
-                                            background: 'transparent',
-                                            border: 'none',
-                                            borderRadius: '50%',
-                                            width: 36,
-                                            height: 36,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-                                            padding: 0,
-                                            zIndex: 1002
-                                        }}
-                                        tabIndex={0}
-                                        aria-label={isDimmed ? "Sound off (dimmed)" : "Sound on (full)"}
-                                        onClick={() => setIsDimmed(d => !d)}
-                                    >
-                                        <SoundIcon opacity={isDimmed ? 0.45 : 1} />
-                                    </button>
+									<button
+										style={{
+											position: 'absolute',
+											left: 0,
+											top: '50%',
+											transform: 'translateY(-50%)',
+											background: 'transparent',
+											border: 'none',
+											borderRadius: '50%',
+											width: 36,
+											height: 36,
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'center',
+											cursor: 'pointer',
+											boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+											padding: 0,
+											zIndex: 1002,
+											// Responsive: move to left center for <=1075px
+											...(window.innerWidth <= 1075 ? {
+												left: 20,
+												right: 'auto',
+												top: '50%',
+												bottom: 'auto',
+												transform: 'translateY(-50%)',
+											} : {
+												left: '50%',
+												bottom: 38,
+												top: 'auto',
+												transform: 'translateX(-50%)',
+											})
+										}}
+										tabIndex={0}
+										aria-label={isDimmed ? "Sound off (dimmed)" : "Sound on (full)"}
+										onClick={() => setIsDimmed(d => !d)}
+									>
+										<SoundIcon opacity={isDimmed ? 0.45 : 1} />
+									</button>
                                 );
                             })()}
 					   </div>
