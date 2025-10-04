@@ -31,7 +31,7 @@ export default function VictimInterface() {
 		subject: "I",
 		object: "I",
 		pendingSubject: "I",
-		pendingObject: "I"
+		pendingObject: "You"
 	});
 
 	// Staged opacities
@@ -65,7 +65,6 @@ export default function VictimInterface() {
 	const [objectHeading, setObjectHeading] = useState([{char: 'I', visible: true}]);
 	const [isAnimatingHeading, setIsAnimatingHeading] = useState(false);
 	const [isLocked, setIsLocked] = useState(false);
-	const headingAnimTimers = useRef([]);
 
 	const [interfaceOpacityIncrease] = useState(0.8)
 
@@ -97,6 +96,26 @@ export default function VictimInterface() {
 		return p.toLowerCase() === 'them' ? 'they' : p.toLowerCase();
 	}
 
+	// Prepare the transition animation trigger at the top level
+	const triggerTransition = useTransitionAnimation({
+		setIsAnimatingHeading,
+		setSubjectHeading,
+		setObjectHeading,
+		setPronounState,
+		setSubjectDescOpacity,
+		setObjectDescOpacity,
+		setPoemOpacity,
+		setWhitePoemOpacity,
+		setLeftVideoOpacity,
+		setCenterVideoOpacity,
+		setRightVideoOpacity,
+		setIsLocked,
+		pronounState,
+		audioRef,
+		stages,
+		normalizePronoun
+	});
+
 	function handlePronounChange(type, value) {
 		if (isLocked) return; // Prevent ALL input during animation
 
@@ -107,7 +126,7 @@ export default function VictimInterface() {
 		
 		setIsLocked(true);
 
-		useTransitionAnimation();
+		triggerTransition(type, value);
 	}
 
 	// Shared flicker handlers
@@ -148,7 +167,6 @@ export default function VictimInterface() {
 		initialPoemFadeIn.current = setTimeout(()=> {
 			setWhitePoemOpacity(1);
 		}, 3000);
-		console.log("initialPoemFadeIn", initialPoemFadeIn);
 	}, []);
 
 	useEffect(() => {
