@@ -23,8 +23,7 @@ function useTransitionAnimation({
     setIsLocked,
     pronounState,
     audioRef,
-    stages,
-    normalizePronoun
+    stages
 }) {
     const headingAnimTimers = useRef([]);
 
@@ -94,7 +93,7 @@ function useTransitionAnimation({
                                 setIsLocked(false); // UNLOCK after all transitions
                             }, unlockDelay);
                             // Play sound exactly when poem appears, and set loop if needed
-                            const stageData = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
+                            const stageData = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
                             if (audioRef.current && stageData?.sound) {
                                 audioRef.current.pause();
                                 audioRef.current.currentTime = 0;

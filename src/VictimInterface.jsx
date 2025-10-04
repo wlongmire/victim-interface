@@ -72,10 +72,10 @@ export default function VictimInterface() {
 	const objectPanelOpacity = increaseOpacity(objectOpacity);
 
 
-	const pendingStage = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
+	const pendingStage = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
 	const poem = pendingStage?.poem || [];
 
-	const currentStage = stages[normalizePronoun(pronounState.subject)]?.[normalizePronoun(pronounState.object)];
+	const currentStage = stages[pronounState.subject.toLowerCase()]?.[pronounState.object.toLowerCase()];
 
 	const leftPanel = currentStage?.left || {};
 	const centerPanel = currentStage?.center || {};
@@ -87,10 +87,7 @@ export default function VictimInterface() {
 	const pronouns = ["I", "You", "Them"];
 	const initialPoemFadeIn = useRef();
 
-	// Map display 'Them' to data key 'they'
-	function normalizePronoun(p) {
-		return p.toLowerCase() === 'them' ? 'they' : p.toLowerCase();
-	}
+
 
 	// Prepare the transition animation trigger at the top level
 	const triggerTransition = useTransitionAnimation({
@@ -108,8 +105,7 @@ export default function VictimInterface() {
 		setIsLocked,
 		pronounState,
 		audioRef,
-		stages,
-		normalizePronoun
+		stages
 	});
 
 	function handlePronounChange(type, value) {

@@ -63,11 +63,11 @@ export const stages = {
           showVideo:false,
           colorMode:"black"
         },
-                sound: '/audio/i-you.mp3',
-                soundLoop: true,
-  subjectDescription:"THE SUBJECT IS THE AUTHOR OBJECTING TO THE OBJECT YOU PUT ME IN.",
-  objectDescription:"THE READER IS AN OBJECT YOU VICTIMIZED AND THAT'S HOW YOU GOT SHOT.",
-  poem: [
+        sound: '/audio/i-you.mp3',
+        soundLoop: true,
+        subjectDescription:"THE SUBJECT IS THE AUTHOR OBJECTING TO THE OBJECT YOU PUT ME IN.",
+        objectDescription:"THE READER IS AN OBJECT YOU VICTIMIZED AND THAT'S HOW YOU GOT SHOT.",
+        poem: [
           "{I} am the monster",
           "the moment [you] say",
           "{I} am. Shoot {me}",
@@ -75,17 +75,16 @@ export const stages = {
           "in {my} open mouth",
           "as soon as the dark",
           "in [your] head shows its teeth",
-          "",
           "{I} will wait for [you]",
           "forever. Yelling proud",
           "in the middle of the street",
           "",
           "so tired and in love. Begging",
           "for a mistake unremarkable",
-          "and human at last.",
+          "and human at last."
         ]
       },
-      "they":{
+      "them":{
         left:{
           showVideo:true,
           colorMode:"black",
@@ -202,7 +201,7 @@ export const stages = {
           "unremarkable shot.",
         ]
       },
-      "they":{
+      "them":{
         left:{
           showVideo:true,
           colorMode:"black",
@@ -243,7 +242,7 @@ export const stages = {
         ]
       },
     },
-    "they":{
+    "them":{
       "i":{
         left:{
           showVideo:true,
@@ -319,7 +318,7 @@ export const stages = {
           "then [you].",
         ]
       },
-      "they":{
+      "them":{
         left:{
           showVideo:true,
           colorMode:"black",
