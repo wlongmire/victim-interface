@@ -26,12 +26,13 @@ export function PronounPanel({
 }) {
   const panelBg = "#000";
   const panelColor = baseColor + opacityHex;
-  const flickerBg = baseColor + opacityHex;
-  const flickerBorder = `1px solid ${baseColor + opacityHex}`;
-  const buttonSelectedBg = flickerBg;
+  const bkgColor = baseColor + opacityHex;
+  const borderColor = `1px solid ${baseColor + opacityHex}`;
+  
+  const buttonSelectedBg = bkgColor;
   const buttonSelectedColor = "#000";
-  const buttonUnselectedColor = flickerBg;
-  const buttonBorder = flickerBorder;
+  const buttonUnselectedColor = bkgColor;
+  const buttonBorder = borderColor;
 
   return (
     <Panel bg={panelBg} color={panelColor} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>

@@ -2,7 +2,6 @@ import SoundIcon from './icons/SoundIcon.jsx';
 
 import { useState, useRef, useEffect } from "react";
 import useAudioFadeOut from './utils/useAudioFadeOut';
-import useFlickerOpacity from './utils/useFlickerOpacity';
 import useTransitionAnimation from './utils/useTransitionAnimation';
 import renderPoemLine from './utils/renderPoemLine';
 
@@ -51,13 +50,9 @@ export default function VictimInterface() {
 	const [subjectOpacity] = useState("66");
 	const [objectOpacity] = useState("66");
 
-	const [flickerRange, setFlickerRange] = useState(3);
 	// Overlay opacity for subject/object panels
 	const [subjectOverlay, setSubjectOverlay] = useState(0);
 	const [objectOverlay, setObjectOverlay] = useState(0);
-	const [subjectFlickerOpacity] = useFlickerOpacity(subjectOpacity, flickerRange, 30);
-	const [objectFlickerOpacity] = useFlickerOpacity(objectOpacity, flickerRange, 35);
-
 
 	// For animated heading
 	// Each heading is an array of {char, visible}
@@ -73,8 +68,8 @@ export default function VictimInterface() {
 		let newDec = Math.min(dec + Math.round(255 * interfaceOpacityIncrease), 255);
 		return newDec.toString(16).padStart(2, '0').toUpperCase();
 	}
-	const subjectPanelOpacity = increaseOpacity(subjectFlickerOpacity);
-	const objectPanelOpacity = increaseOpacity(objectFlickerOpacity);
+	const subjectPanelOpacity = increaseOpacity(subjectOpacity);
+	const objectPanelOpacity = increaseOpacity(objectOpacity);
 
 
 	const pendingStage = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
@@ -130,24 +125,20 @@ export default function VictimInterface() {
 		triggerTransition(type, value);
 	}
 
-	// Shared flicker handlers
+	// Mouse Rollover Handlers
 	const handleSubjectPanelMouseEnter = () => {
-		setFlickerRange(10);
 		setSubjectOverlay(0.6);
 		if (!isLocked) setWhitePoemOpacity(0);
 	};
 	const handleSubjectPanelMouseLeave = () => {
-		setFlickerRange(2);
 		setSubjectOverlay(0);
 		if (!isLocked) setWhitePoemOpacity(1);
 	};
 	const handleObjectPanelMouseEnter = () => {
-		setFlickerRange(10);
 		setObjectOverlay(0.6);
 		if (!isLocked) setWhitePoemOpacity(0);
 	};
 	const handleObjectPanelMouseLeave = () => {
-		setFlickerRange(2);
 		setObjectOverlay(0);
 		if (!isLocked) setWhitePoemOpacity(1);
 	};
@@ -274,9 +265,9 @@ export default function VictimInterface() {
 										line,
 										idx,
 										subjectColor,
-										subjectFlickerOpacity,
+										subjectOpacity,
 										objectColor,
-										objectFlickerOpacity,
+										objectOpacity,
 										PoemWord
 									)
 								)}
@@ -352,7 +343,6 @@ export default function VictimInterface() {
 											boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
 											padding: 0,
 											zIndex: 1002,
-											// Responsive: move to left center for <=1075px
 											...(window.innerWidth <= 1075 ? {
 												left: 20,
 												right: 'auto',
