@@ -76,17 +76,18 @@ export default function VictimInterface() {
 	const subjectPanelOpacity = increaseOpacity(subjectFlickerOpacity);
 	const objectPanelOpacity = increaseOpacity(objectFlickerOpacity);
 
-	const poemStage = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
-	const poem = poemStage?.poem || [];
 
-	const descStage = stages[normalizePronoun(pronounState.subject)]?.[normalizePronoun(pronounState.object)];
-	
-    const leftPanel = descStage?.left || {};
-	const centerPanel = descStage?.center || {};
-	const rightPanel = descStage?.right || {};
-	
-    const subjectDescription = descStage?.subjectDescription || "";
-	const objectDescription = descStage?.objectDescription || "";
+	const pendingStage = stages[normalizePronoun(pronounState.pendingSubject)]?.[normalizePronoun(pronounState.pendingObject)];
+	const poem = pendingStage?.poem || [];
+
+	const currentStage = stages[normalizePronoun(pronounState.subject)]?.[normalizePronoun(pronounState.object)];
+
+	const leftPanel = currentStage?.left || {};
+	const centerPanel = currentStage?.center || {};
+	const rightPanel = currentStage?.right || {};
+
+	const subjectDescription = currentStage?.subjectDescription || "";
+	const objectDescription = currentStage?.objectDescription || "";
 
 	const pronouns = ["I", "You", "Them"];
 	const initialPoemFadeIn = useRef();

@@ -1,5 +1,4 @@
 import { Panel, Title, Description, Highlight, ButtonGroup, Button } from "./VictimInterface.styled";
-import React from "react";
 import VideoOrBlank from "./VideoOrBlank";
 import renderDescription from "./utils/renderDescription"
 
