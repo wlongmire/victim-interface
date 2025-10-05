@@ -71,7 +71,6 @@ export default function VictimInterface() {
 	const subjectPanelOpacity = increaseOpacity(subjectOpacity);
 	const objectPanelOpacity = increaseOpacity(objectOpacity);
 
-
 	const pendingStage = stages[pronounState.pendingSubject.toLowerCase()]?.[pronounState.pendingObject.toLowerCase()];
 	const poem = pendingStage?.poem || [];
 
