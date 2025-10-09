@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Black background -->
+  <rect width="64" height="64" fill="#000"/>
+  <!-- White top border line -->
+  <rect x="0" y="0" width="64" height="4" fill="#fff"/>
+  <!-- White element of operator (∈) -->
+  <text x="32" y="48" text-anchor="middle" font-size="50" font-family="serif" fill="#fff">∈</text>
+</svg>
